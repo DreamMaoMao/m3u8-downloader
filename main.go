@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/http-live-streaming/m3u8-downloader/dl"
+	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 )
 
 var (
@@ -44,6 +45,20 @@ func main() {
 	if err := downloader.Start(chanSize); err != nil {
 		panic(err)
 	}
+
+	err = ffmpeg_go.Input(output+"/main.ts").
+		Output(output+"/main.mp4", ffmpeg_go.KwArgs{"c": "copy", "f": "mp4"}).
+		OverWriteOutput().ErrorToStdOut().Run()
+	if err != nil {
+		panic("cover to mp4 failed")
+	}
+
+	fmt.Println("removing ts file....")
+	err = os.Remove(output + "/main.ts")
+	if err != nil {
+		fmt.Println("remove ts file failed", err)
+	}
+
 	fmt.Println("Done!")
 }
 
