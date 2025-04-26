@@ -1,4 +1,4 @@
-module github.com/http-live-streaming/m3u8-downloader
+module m3u8down
 
 go 1.15
 
